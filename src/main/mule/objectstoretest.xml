@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="136e0d8c-c284-428d-9cf3-2183abba8dec" basePath="/" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<os:object-store name="Object_Token_Store" doc:name="Object store" doc:id="72be2bac-2cd9-4dc7-916b-6366882efa5d" config-ref="ObjectStore_Token_Config"/>
+	
+	<os:config name="ObjectStore_Token_Config" doc:name="ObjectStore Config" doc:id="31a48bef-2404-4885-8f8b-084bde46de99" />
+	<flow name="objectstoretestFlow" doc:id="09389dbd-c351-4154-8f92-7cadff567509" >
+		<http:listener doc:name="Listener" doc:id="753ad15c-7f6a-4e5d-ad9d-abc662b7adb2" config-ref="HTTP_Listener_config" path="/token"/>
+		<set-variable value="ZCKEBw5c-4F81BnRKB3ZdSFLc0qVz6Jd1E" doc:name="Set Variable" doc:id="1ccf7fa2-d5f7-428a-b524-cb70ac48989e" variableName="vToken"/>
+		<os:contains doc:name="Contains" doc:id="ec14a8b7-511f-4cea-be8e-875d7020b7b9" key="OBJ_TOKEN" objectStore="Object_Token_Store"/>
+		<os:store doc:name="Store" doc:id="129d306e-6fd3-4224-9eea-26655f6c1b82" key="OBJ_TOKEN" objectStore="Object_Token_Store" failOnNullValue="false">
+			<os:value ><![CDATA[#[vars.vToken]]]></os:value>
+		</os:store>
+		<os:retrieve doc:name="Retrieve" doc:id="ac0c7626-45d3-4e54-a835-24e149aa85ba" key="OBJ_TOKEN" objectStore="Object_Token_Store" target="vStoredToken">
+			<os:default-value ><![CDATA[#["" as String]]]></os:default-value>
+		</os:retrieve>
+		<logger level="INFO" doc:name="Logger" doc:id="a6a6ea96-4586-4ea7-81d0-db8634617172" message="Logger: #[vars.vStoredToken]"/>
+		<os:remove doc:name="Remove" doc:id="fe1e7bf7-0b55-4083-b641-2c025974658c" key="OBJ_TOKEN" objectStore="Object_Token_Store"/>
+		<os:retrieve doc:name="Copy_of_Retrieve" doc:id="0a339d98-27cb-4320-abe0-4a2aacd75352" key="OBJ_TOKEN" objectStore="Object_Token_Store" target="vStoredToken" >
+			<os:default-value ><![CDATA[#["" as String]]]></os:default-value>
+		</os:retrieve>
+		<logger level="INFO" doc:name="Copy_of_Logger" doc:id="eae2e94a-61d4-485f-b300-637f0f7d110a" message="Logger: #[vars.vStoredToken]" />
+	</flow>
+</mule>
