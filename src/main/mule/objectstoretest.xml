@@ -26,6 +26,6 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 		<os:retrieve doc:name="Copy_of_Retrieve" doc:id="0a339d98-27cb-4320-abe0-4a2aacd75352" key="OBJ_TOKEN" objectStore="Object_Token_Store" target="vStoredToken" >
 			<os:default-value ><![CDATA[#["" as String]]]></os:default-value>
 		</os:retrieve>
-		<logger level="INFO" doc:name="Copy_of_Logger" doc:id="eae2e94a-61d4-485f-b300-637f0f7d110a" message="Logger: #[vars.vStoredToken]" />
+		<logger level="INFO" doc:name="Logger" doc:id="eae2e94a-61d4-485f-b300-637f0f7d110a" message="Logger: #[vars.vStoredToken]" />
 	</flow>
 </mule>
